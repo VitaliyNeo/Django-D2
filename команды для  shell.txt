@@ -1,0 +1,73 @@
+python manage.py shell
+from news.models import*
+u1 = User.objects.create_user('Ivan')
+u2 = User.objects.create_user('Petr')
+u3 = User.objects.create_user('Semen')
+Author.objects.create(authorUser=u1)
+Author.objects.create(authorUser=u2)
+Author.objects.create(authorUser=u3)
+
+Category.objects.create(name='IT WORLD NEWS')
+Category.objects.create(name='HARDWARE')
+Category.objects.create(name='SOFTWARE')
+Category.objects.create(name='GAMES')
+
+author1 = Author.objects.get(id=1)
+Post.objects.create(author=author1, categoryType='NW', title='sometitle news', text='somebigtext')
+Post.objects.create(author=author1, categoryType='AR', title='sometitle article', text='somearticlebigtext')
+author2 = Author.objects.get(id=2)
+Post.objects.create(author=author2, categoryType='AR', title='sometitle article', text='somearticlebigtext')
+author3 = Author.objects.get(id=3)
+Post.objects.create(author=author3, categoryType='AR', title='sometitle article', text='somearticlebigtext')
+
+Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))
+Post.objects.get(id=2).postCategory.add(Category.objects.get(id=2))
+Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))
+Post.objects.get(id=1).postCategory.add(Category.objects.get(id=4))
+Post.objects.get(id=2).postCategory.add(Category.objects.get(id=3))
+Post.objects.get(id=4).postCategory.add(Category.objects.get(id=2))
+
+Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='some_commenttext_by_author1')
+Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=Author.objects.get(id=2).authorUser, text='some_commenttext_by_author2')
+Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=3).authorUser, text='some_commenttext_by_author3')
+Comment.objects.create(commentPost=Post.objects.get(id=4), commentUser=Author.objects.get(id=1).authorUser, text='some_commenttext_by_author1')
+Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=2).authorUser, text='some_commenttext_by_author2')
+Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=1).authorUser, text='some_commenttext_by_author1')
+
+Post.objects.get(id=1).like()
+Post.objects.get(id=2).like()
+Post.objects.get(id=3).like()
+Post.objects.get(id=1).dislike()
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=2).like()
+Comment.objects.get(id=3).like()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=5).like()
+Comment.objects.get(id=6).dislike()
+
+a1 = Author.objects.get(id=1)
+a2 = Author.objects.get(id=2)
+a3 = Author.objects.get(id=3)
+a1.update_rating()
+a2.update_rating()
+a3.update_rating()
+
+a = Author.objects.order_by('-ratingAuthor')[:1]
+for i in a:
+    i.ratingAuthor
+    i.authorUser.username
+
+p = Post.objects.order_by('-rating')[:1]
+for j in p:
+    j.dateCreation	
+	j.author.authorUser.username	
+	j.rating	
+	j.title	
+	j.preview()
+
+s = Comment.objects.filter(commentPost_id=p)
+for i in s:
+    i.dateCreation	
+	i.text	
+	i.rating	
+	i.commentUser.username
